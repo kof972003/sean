@@ -1,10 +1,9 @@
 package com.iflytek.stream.persist;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang.StringUtils;
+import model.UserInfo;
+
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.HBaseConfiguration;
 import org.apache.hadoop.hbase.HColumnDescriptor;
@@ -13,12 +12,10 @@ import org.apache.hadoop.hbase.TableName;
 import org.apache.hadoop.hbase.client.Admin;
 import org.apache.hadoop.hbase.client.Connection;
 import org.apache.hadoop.hbase.client.ConnectionFactory;
-import org.apache.hadoop.hbase.client.Put;
-import org.apache.hadoop.hbase.client.Table;
 
 import com.iflytek.util.Constants;
 
-public class DataManager {
+public abstract class DataManager {
 	
 	public static Configuration configuration;
 	
@@ -48,29 +45,22 @@ public class DataManager {
         admin.createTable(tableDescriptor);
     }
 	
-	public static void insertData(String tableName, List<String> dataList) throws Exception{
-		if(StringUtils.isEmpty(tableName) || CollectionUtils.isEmpty(dataList)){
-			System.out.println("table name is empty, or dataList is empty!");
-			return;
-		}
-		Connection conn = ConnectionFactory.createConnection(configuration);
-		Table table = conn.getTable(TableName.valueOf(tableName));
-		List<Put> putList = new ArrayList<Put>();
-		for(String str : dataList){
-			Put put = new Put(str.getBytes());
-			put.add("f1".getBytes(), "mark".getBytes(), "1".getBytes());
-			putList.add(put);
-		}
-		System.out.println("data is saving");
-		table.put(putList);
+	public abstract void insertData(String tableName, List<UserInfo> userInfoList) throws Exception;
+	
+	public void insertDataWithTimeCost(String tableName, List<UserInfo> userInfoList) throws Exception{
+		long start = System.currentTimeMillis();
+		insertData(tableName, userInfoList);
+		long end = System.currentTimeMillis();
+		long cost = end - start;
+		System.out.println("处理数据条数：" + userInfoList.size() + "条，总共耗时："+cost+"毫秒，平均每条数据耗时：" + cost/userInfoList.size()+"毫秒");
 	}
 	
-	public static void insertDataWithReset(String tableName,List<String> dataList) throws Exception{
+	public void insertDataWithReset(String tableName,List<UserInfo> userInfoList) throws Exception{
 		creaTable(tableName);
-		insertData(tableName, dataList);
+		insertDataWithTimeCost(tableName, userInfoList);
 	}
 	
-	public static void insertDataWithTableCheck(String tableNameStr,List<String> dataList) throws Exception{
+	public void insertDataWithTableCheck(String tableNameStr,List<UserInfo> userInfoList) throws Exception{
 		Connection conn = ConnectionFactory.createConnection(configuration);
 		Admin admin = conn.getAdmin();
 //		HBaseAdmin admin = new HBaseAdmin(configuration);
@@ -81,7 +71,7 @@ public class DataManager {
             admin.createTable(tableDescriptor);
             System.out.println("table is created");
         }
-        insertData(tableNameStr,dataList);
+        insertDataWithTimeCost(tableNameStr,userInfoList);
 	}
 	
 	public static void main(String[] args){

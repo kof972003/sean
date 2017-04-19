@@ -14,5 +14,7 @@ public class Constants {
 	public static final String ALERT_MSG_HTABLE = "test_alert_msg";
 	public static final String CALCULATE_MSG_TOPIC = "test_calculate_msg";
 	public static final String CALCULATE_MSG_HTABLE = "test_calculate_msg";
+	public static final String STATIC_MSG_TOPIC = "test_static_msg";
+	public static final String STATIC_MSG_HTABLE = "test_static_msg";
 
 }

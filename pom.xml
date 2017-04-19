@@ -43,5 +43,12 @@
             <artifactId>hadoop-hdfs</artifactId>
             <version>2.6.0</version>
         </dependency>
+	<!-- https://mvnrepository.com/artifact/org.apache.phoenix/phoenix-core -->
+<dependency>
+    <groupId>org.apache.phoenix</groupId>
+    <artifactId>phoenix-core</artifactId>
+    <version>4.8.0-HBase-1.2</version>
+</dependency>
+
   </dependencies>
 </project>

@@ -7,6 +7,7 @@ public class Creator {
 	
 	public static final int NUM_RANGE = 100;
 	public static final int NUM_SIZE = 40;
+	public static final int CAL_LIMIT = 500;
 	
 	public static String autoCreateNum(int range){
 		return String.valueOf((int)(Math.random() * NUM_RANGE));
@@ -19,5 +20,9 @@ public class Creator {
 		}
 		return dataList;
 	}
-
+	
+	public static int autoCalLimit(){
+		return CAL_LIMIT;
+	}
+	
 }
