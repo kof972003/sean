@@ -1,5 +1,6 @@
 package com.iflytek.test.kafka;
 
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -8,15 +9,15 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Random;
 
-public class PhoenixClient {
+public class PhoenixClient2 {
 	
 	private String url = "jdbc:phoenix:192.168.59.22:2181";  
 //    private String driver = "com.salesforce.phoenix.jdbc.PhoenixDriver";  
 	private String driver = "org.apache.phoenix.jdbc.PhoenixDriver"; 
     private Connection connection = null;  
-    private static final String TABLE_NAME = "phoenix_test";
+    private static final String TABLE_NAME = "phoenix_test_chg2";
   
-    public PhoenixClient() {  
+    public PhoenixClient2() {  
         try {  
             Class.forName(driver);  
             connection = DriverManager.getConnection(url);  
@@ -40,7 +41,7 @@ public class PhoenixClient {
     }  
   
     public void createTable() {  
-        String sql = "create table IF NOT EXISTS " + TABLE_NAME + "(stuid integer not null primary key,name VARCHAR,age integer,score integer,classid integer)";  
+        String sql = "create table IF NOT EXISTS " + TABLE_NAME + "(stuid integer not null primary key,name VARCHAR,age unsigned_int,score unsigned_int,classid unsigned_int)";  
         try {  
             Statement statement = connection.createStatement();  
             statement.executeUpdate(sql);  
@@ -69,7 +70,7 @@ public class PhoenixClient {
         try {  
             statement = connection.prepareStatement(sql);  
             Random random = new Random();  
-            for (int i = 1; i <= 100; i++) {  
+            for (int i = 1; i <= 10000; i++) {  
                 statement.setInt(1,i);  
                 statement.setString(2,TABLE_NAME + "_" + i);  
                 statement.setInt(3, random.nextInt(18));  
@@ -122,11 +123,11 @@ public class PhoenixClient {
     }  
   
     public static void main(String[] args) {  
-        PhoenixClient client = new PhoenixClient();  
-//        client.deleteTable();
-//        client.createTable();  
-//        client.insertRecord();  
-        client.selectRecord();  
+        PhoenixClient2 client = new PhoenixClient2();  
+        client.deleteTable();
+        client.createTable();  
+        client.insertRecord();  
+//        client.selectRecord();  
     }  
 
 }
